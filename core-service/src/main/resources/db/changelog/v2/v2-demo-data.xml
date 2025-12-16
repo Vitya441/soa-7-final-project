@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2025-05-11:demo-data" author="Vitya441">
+        <insert tableName="app_user">
+            <column name="id" valueNumeric="1"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="$2a$10$qARSo6s5NrEmyB5zPK9hzeTTFuZXvN95PPEYX0QmY/jxEW.cpgXha"/>
+            <column name="role" value="ADMIN"/>
+            <column name="first_name" value="Viktor"/>
+            <column name="last_name" value="Maksimov"/>
+        </insert>
+        <insert tableName="app_user">
+            <column name="id" valueNumeric="2"/>
+            <column name="username" value="reader"/>
+            <column name="password" value="$2a$10$qARSo6s5NrEmyB5zPK9hzeTTFuZXvN95PPEYX0QmY/jxEW.cpgXha"/>
+            <column name="role" value="READER"/>
+            <column name="first_name" value="Nikita"/>
+            <column name="last_name" value="Labut"/>
+        </insert>
+        <insert tableName="app_user">
+            <column name="id" valueNumeric="3"/>
+            <column name="username" value="librarian"/>
+            <column name="password" value="$2a$10$qARSo6s5NrEmyB5zPK9hzeTTFuZXvN95PPEYX0QmY/jxEW.cpgXha"/>
+            <column name="role" value="LIBRARIAN"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Doe"/>
+        </insert>
+        <sql endDelimiter=";">
+            SELECT setval('app_user_id_seq', 4, true);
+        </sql>
+        <insert tableName="book">
+            <column name="id" valueNumeric="1"/>
+            <column name="title" value="Мастер и Маргарита"/>
+            <column name="genre" value="Роман"/>
+            <column name="author" value="Михаил Булгаков"/>
+            <column name="total_copies" valueNumeric="100"/>
+            <column name="available_copies" valueNumeric="100"/>
+            <column name="created_at" valueDate="2025-05-05T12:00:00"/>
+            <column name="updated_at" valueDate="2025-05-05T12:00:00"/>
+        </insert>
+        <insert tableName="book">
+            <column name="id" valueNumeric="2"/>
+            <column name="title" value="Колобок"/>
+            <column name="genre" value="Сказка"/>
+            <column name="author" value="Народ"/>
+            <column name="total_copies" valueNumeric="100"/>
+            <column name="available_copies" valueNumeric="100"/>
+            <column name="created_at" valueDate="2025-05-05T12:00:00"/>
+            <column name="updated_at" valueDate="2025-05-05T12:00:00"/>
+        </insert>
+        <insert tableName="book">
+            <column name="id" valueNumeric="3"/>
+            <column name="title" value="Метро 2033"/>
+            <column name="genre" value="Роман"/>
+            <column name="author" value="Дмитрий Глуховский"/>
+            <column name="total_copies" valueNumeric="100"/>
+            <column name="available_copies" valueNumeric="100"/>
+            <column name="created_at" valueDate="2025-05-05T12:00:00"/>
+            <column name="updated_at" valueDate="2025-05-05T12:00:00"/>
+        </insert>
+        <sql endDelimiter=";">
+            SELECT setval('book_id_seq', 4, true);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

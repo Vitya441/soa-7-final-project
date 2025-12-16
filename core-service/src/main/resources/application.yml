@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: core-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    contexts: dev
+#    contexts: КОНТЕКСТ
+
+app:
+  jwt:
+    secretKey: 0Eioi/fU1o9TneU3JU+ut3hN88c1SRQsuRBDhYCkjMA=
+    expiration: 9999999999999999

@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-04-20:audit-columns
+      author: Vitya441
+      changes:
+        - addColumn:
+            tableName: book
+            columns:
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+        - addColumn:
+            tableName: loan
+            columns:
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+        - addColumn:
+            tableName: reservation
+            columns:
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp

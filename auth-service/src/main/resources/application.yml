@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/soa_7_db_auth
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+app:
+  jwt:
+    secretKey: 0Eioi/fU1o9TneU3JU+ut3hN88c1SRQsuRBDhYCkjMA=
+    expiration: 9999999999999999
+    

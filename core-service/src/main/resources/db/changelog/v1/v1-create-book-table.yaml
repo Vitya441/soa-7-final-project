@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet: 
+      id: 2025-02-25:create-book-table
+      author: Vitya441
+      changes:
+        - createTable:
+            tableName: book
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: genre
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_copies
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: available_copies
+                  type: int
+                  constraints:
+                    nullable: false
