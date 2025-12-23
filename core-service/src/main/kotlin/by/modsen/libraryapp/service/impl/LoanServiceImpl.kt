@@ -8,7 +8,6 @@ import by.modsen.libraryapp.exception.NotFoundException
 import by.modsen.libraryapp.mapper.LoanMapper
 import by.modsen.libraryapp.repository.BookRepository
 import by.modsen.libraryapp.repository.LoanRepository
-import by.modsen.libraryapp.repository.UserRepository
 import by.modsen.libraryapp.service.LoanService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,21 +17,17 @@ import java.time.LocalDate
 class LoanServiceImpl(
     private val loanRepository: LoanRepository,
     private val bookRepository: BookRepository,
-    private val userRepository: UserRepository,
     private val loanMapper: LoanMapper,
 ) : LoanService {
 
     /**
      * Будет вызывать библиотекарь в библиотеке, когда к нему придет пользователь?
      */
+    // todo: тут библиотекарь должен передать явно readerId, тут нельзя просто взять из контекста безопасности
     @Transactional
     override fun createLoan(loanRequest: LoanRequest): LoanResponse {
         val readerId = loanRequest.readerId
         val bookId = loanRequest.bookId
-
-        val reader = userRepository
-            .findById(readerId)
-            .orElseThrow { NotFoundException("Reader with id = $readerId not found") }
 
         val book = bookRepository
             .findById(bookId)
@@ -45,7 +40,7 @@ class LoanServiceImpl(
         // Высчитываем дату возврата
         val dueDate = LocalDate.now().plusDays(loanRequest.days)
 
-        val loan = Loan(book = book, reader = reader, dueDate = dueDate)
+        val loan = Loan(book = book, readerId = readerId, dueDate = dueDate)
         loanRepository.save(loan)
 
         book.availableCopies -= 1
@@ -75,19 +70,21 @@ class LoanServiceImpl(
         return loanMapper.toResponse(loan)
     }
 
+    // todo: для LIBRARIAN и ADMIN ?
     override fun getLoansByReaderId(readerId: Long): List<LoanResponse> {
-        if (!userRepository.existsById(readerId)) {
-            throw NotFoundException("Reader with id = $readerId not found")
-        }
+//        if (!userRepository.existsById(readerId)) {
+//            throw NotFoundException("Reader with id = $readerId not found")
+//        }
         val loans = loanRepository.findAllByReaderId(readerId)
 
         return loanMapper.toListResponse(loans)
     }
 
+    // todo: для LIBRARIAN и ADMIN ? (Если перадем явно, надо обратиться к Auth-Service? либо вернуть просто пустой список если пользователя нету такого)
     override fun getActiveLoansByReaderId(readerId: Long): List<LoanResponse> {
-        if (!userRepository.existsById(readerId)) {
-            throw NotFoundException("Reader with id = $readerId not found")
-        }
+//        if (!userRepository.existsById(readerId)) {
+//            throw NotFoundException("Reader with id = $readerId not found")
+//        }
         val loans = loanRepository.findAllByReaderIdAndIsReturnedFalse(readerId)
 
         return loanMapper.toListResponse(loans)

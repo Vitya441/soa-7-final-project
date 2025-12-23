@@ -5,33 +5,6 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="2025-05-11:demo-data" author="Vitya441">
-        <insert tableName="app_user">
-            <column name="id" valueNumeric="1"/>
-            <column name="username" value="admin"/>
-            <column name="password" value="$2a$10$qARSo6s5NrEmyB5zPK9hzeTTFuZXvN95PPEYX0QmY/jxEW.cpgXha"/>
-            <column name="role" value="ADMIN"/>
-            <column name="first_name" value="Viktor"/>
-            <column name="last_name" value="Maksimov"/>
-        </insert>
-        <insert tableName="app_user">
-            <column name="id" valueNumeric="2"/>
-            <column name="username" value="reader"/>
-            <column name="password" value="$2a$10$qARSo6s5NrEmyB5zPK9hzeTTFuZXvN95PPEYX0QmY/jxEW.cpgXha"/>
-            <column name="role" value="READER"/>
-            <column name="first_name" value="Nikita"/>
-            <column name="last_name" value="Labut"/>
-        </insert>
-        <insert tableName="app_user">
-            <column name="id" valueNumeric="3"/>
-            <column name="username" value="librarian"/>
-            <column name="password" value="$2a$10$qARSo6s5NrEmyB5zPK9hzeTTFuZXvN95PPEYX0QmY/jxEW.cpgXha"/>
-            <column name="role" value="LIBRARIAN"/>
-            <column name="first_name" value="John"/>
-            <column name="last_name" value="Doe"/>
-        </insert>
-        <sql endDelimiter=";">
-            SELECT setval('app_user_id_seq', 4, true);
-        </sql>
         <insert tableName="book">
             <column name="id" valueNumeric="1"/>
             <column name="title" value="Мастер и Маргарита"/>

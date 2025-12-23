@@ -4,7 +4,7 @@ import by.modsen.libraryapp.dto.response.ReservationResponse
 
 interface ReservationService {
 
-    fun reserveBook(readerId: Long, bookId: Long): ReservationResponse
+    fun reserveBook(bookId: Long): ReservationResponse
 
     fun rejectReservation(reservationId: Long)
 

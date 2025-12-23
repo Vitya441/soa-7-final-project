@@ -30,10 +30,9 @@ class JwtAuthenticationFilter(
         val jwt = authHeader.substring(7)
 
         try {
+            val userId = jwtService.extractUserId(jwt)
             val username = jwtService.extractUsername(jwt)
             val roleName = jwtService.extractRole(jwt)
-            // todo: Пока что никак не используется
-            val userId = jwtService.extractUserId(jwt)
 
             // Проверка на истечение срока (хотя Jwts.parser уже делает это, это дополнительная проверка)
             if (jwtService.isTokenExpired(jwt)) {
@@ -41,8 +40,8 @@ class JwtAuthenticationFilter(
             }
 
             if (username.isNotEmpty() && SecurityContextHolder.getContext().authentication == null) {
-                val authorities = listOf(SimpleGrantedAuthority("ROLE_${roleName ?: "GUEST"}"))
-                val principal = username
+                val principal = UserPrincipal(id = userId, username = username, role = roleName ?: "READER")
+                val authorities = listOf(SimpleGrantedAuthority("ROLE_${principal.role}"))
 
                 val authToken = UsernamePasswordAuthenticationToken(
                     principal,

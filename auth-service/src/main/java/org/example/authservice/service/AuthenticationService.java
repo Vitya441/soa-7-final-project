@@ -34,7 +34,7 @@ public class AuthenticationService {
                 .password(encoder.encode(request.password()))
                 .firstName(request.firstName())
                 .lastName(request.lastName())
-                .role(Role.USER)
+                .role(Role.READER)
                 .build();
         user = repository.save(user);
         CustomUserDetails userDetails = buildUserDetails(user);
@@ -52,6 +52,6 @@ public class AuthenticationService {
     }
 
     private CustomUserDetails buildUserDetails(User user) {
-        return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), Role.USER);
+        return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), Role.READER);
     }
 }

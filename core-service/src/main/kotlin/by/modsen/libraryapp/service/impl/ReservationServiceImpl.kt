@@ -9,7 +9,6 @@ import by.modsen.libraryapp.mapper.ReservationMapper
 import by.modsen.libraryapp.repository.BookRepository
 import by.modsen.libraryapp.repository.LoanRepository
 import by.modsen.libraryapp.repository.ReservationRepository
-import by.modsen.libraryapp.repository.UserRepository
 import by.modsen.libraryapp.service.ReservationService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,15 +19,15 @@ class ReservationServiceImpl(
     private val reservationRepository: ReservationRepository,
     private val bookRepository: BookRepository,
     private val loanRepository: LoanRepository,
-    private val userRepository: UserRepository,
     private val reservationMapper: ReservationMapper,
 ) : ReservationService {
 
+    // todo: Вызывает READER, id читателя не передаём, установиться в @PrePersist
     @Transactional
-    override fun reserveBook(readerId: Long, bookId: Long): ReservationResponse {
-        val reader = userRepository
-            .findById(readerId)
-            .orElseThrow { NotFoundException("Reader with id = $readerId not found") }
+    override fun reserveBook(bookId: Long): ReservationResponse {
+//        val reader = userRepository
+//            .findById(readerId)
+//            .orElseThrow { NotFoundException("Reader with id = $readerId not found") }
 
         val book = bookRepository
             .findById(bookId)
@@ -36,7 +35,7 @@ class ReservationServiceImpl(
 
         val reservation = Reservation(
             book = book,
-            reader = reader,
+            readerId = null,
             reservationDate = LocalDate.now(),
             status = OrderStatus.PENDING,
         )
@@ -45,6 +44,7 @@ class ReservationServiceImpl(
         return reservationMapper.toResponse(reservation)
     }
 
+    // todo: Вызывает персонал(LIBRARIAN/ADMIN)
     @Transactional
     override fun rejectReservation(reservationId: Long) {
         val reservation = reservationRepository
@@ -59,31 +59,32 @@ class ReservationServiceImpl(
      * Когда бронь (reservation) одобряют -> создаётся задолженность (loan)
      * и количество доступных экземпляров книг уменьшается.
      */
+    // todo: Вызывает персонал (LIBRARIAN/ADMIN)
     @Transactional
     override fun confirmReservation(reservationId: Long) {
         val reservation = reservationRepository
             .findByIdAndStatus(reservationId, OrderStatus.PENDING)
             .orElseThrow { NotFoundException("Бронирование не найдено") }
 
+
+        val book = reservation.book
+
+        if (book.availableCopies <= 0) {
+            throw RuntimeException("Нет доступных экземпляров для подтверждения брони")
+        }
+
         reservation.status = OrderStatus.CONFIRMED
         reservationRepository.save(reservation)
 
         val loan = Loan(
-            book = reservation.book,
-            reader = reservation.reader,
+            book = book,
+            readerId = reservation.readerId,
             dueDate = LocalDate.now().plusDays(14),
         )
-
-        val bookId = reservation.book.id ?: throw RuntimeException("Book ID is null")
-
-        val book = bookRepository
-            .findById(bookId)
-            .orElseThrow { NotFoundException("Book with id = $bookId not found") }
+        loanRepository.save(loan)
 
         book.availableCopies -= 1
         bookRepository.save(book)
-
-        loanRepository.save(loan)
     }
 
     override fun getReservationsByReaderId(readerId: Long): List<ReservationResponse> {

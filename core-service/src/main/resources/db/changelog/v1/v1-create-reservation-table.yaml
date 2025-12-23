@@ -24,11 +24,11 @@ databaseChangeLog:
               - column:
                   name: reader_id
                   type: bigint
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_reservation_reader
-                    references: app_user(id)
-                    deleteCascade: true
+#                  constraints:
+#                    nullable: false
+#                    foreignKeyName: fk_reservation_reader
+#                    references: app_user(id)
+#                    deleteCascade: true
               - column:
                   name: reservation_date
                   type: date
