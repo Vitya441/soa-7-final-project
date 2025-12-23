@@ -26,9 +26,12 @@ class SecurityConfiguration(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             csrf { disable() }
+            cors { }
             authorizeHttpRequests {
-                authorize("/api/v1/auth/**", permitAll)
+                authorize("/books/**", permitAll)
                 authorize("/public/**", permitAll)
+                authorize(anyRequest, authenticated)
+                authorize(org.springframework.http.HttpMethod.OPTIONS, "/**", permitAll)
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {
@@ -52,5 +55,18 @@ class SecurityConfiguration(
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): org.springframework.web.cors.CorsConfigurationSource {
+        val configuration = org.springframework.web.cors.CorsConfiguration()
+        configuration.allowedOrigins = listOf("http://localhost:5173")
+        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        configuration.allowedHeaders = listOf("*")
+        configuration.allowCredentials = true
+
+        val source = org.springframework.web.cors.UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 }
